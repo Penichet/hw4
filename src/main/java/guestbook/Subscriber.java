@@ -16,5 +16,9 @@ public class Subscriber {
 	public String getEmail() {
 		return this.email;
 	}
+	
+	public Long getID() {
+		return this.id;
+	}
 
 }

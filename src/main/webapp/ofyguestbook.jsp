@@ -19,6 +19,11 @@
 
 <%@ page import="guestbook.Greeting" %>
 <%@ page import="guestbook.Subscriber" %>
+<%@ page import="javax.mail.*" %>
+<%@ page import="javax.mail.internet.*" %> 
+<%@ page import="javax.mail.internet.MimeMessage" %>
+<%@ page import="javax.activation.*" %> 
+<%@ page import="java.util.Properties" %>
 
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -84,21 +89,60 @@ to create you own blog posts!</p>
  
 
 <%
-
     ObjectifyService.register(Greeting.class);
     ObjectifyService.register(Subscriber.class);
     List<Greeting>greetings = ObjectifyService.ofy().load().type(Greeting.class).list();
     List<Subscriber>subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
     Collections.sort(greetings);
     boolean found = false;
+    Long id;
     //show unsub button if subbed, show sub button if unsubbed
     if(user != null){
 	    for(Subscriber sub : subs){
 	    	if(sub.getEmail().equals(user.getEmail())){
 	    		found = true;
+	    		id = sub.getID();
+	    		pageContext.setAttribute("userid", id.toString());
+	    		//TODO: check types
 	    	}
 	    }
     }
+    /////////////////////////////////////////
+    //TEST EMAIL CODE
+    for(Subscriber sub : subs){
+    	    	Properties props = new Properties();
+					Session ses = Session.getDefaultInstance(props, null);
+					
+					Message msg = new MimeMessage(ses);
+					
+					//set message attributes
+					msg.setFrom(new InternetAddress("update@tutorial5-255204.appspotmail.com", "EE461L-HW4 Update"));
+					msg.addRecipient(Message.RecipientType.TO, new InternetAddress(sub.getEmail()));
+					msg.setSubject("New Blog Posts");
+					//sb.append("\n");
+					StringBuilder sb = new StringBuilder();
+					for(Greeting g : greetings){
+						//sb.append(g.getTitle());
+						//sb.append("\n");
+						sb.append(g.getContent());
+						sb.append("\n");
+						//sb.append("Author: " +  g.getUser().getEmail());
+						//sb.append("\n");
+					}
+					sb.append("Thanks for subscribing.");
+					msg.setText(sb.toString());
+					
+					//Transport.send(msg); //send out the email
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    //////////////////////////////////////////
     
     if(!found && user!=null){
     	%>
@@ -107,15 +151,23 @@ to create you own blog posts!</p>
     		<input type="hidden" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/>
     	</form>
     	<%
-    }else{
-    	for(Subscriber sub : subs){
-    		pageContext.setAttribute("user_email",
-    				
-                    sub.getEmail());
+    }else if (user!= null){
+    	//delete user if subscribed
+    	
     		%>
-    			<p>'${fn:escapeXml(user_email)}' is subscribed.</p>
+    			<form action="/unsubscribe" method="post">
+		    		<div><input type="submit" value="Unsubscribe" /></div>
+		    		<input type="hidden" name="userid" value="${fn:escapeXml(userid)}"/>
+    			</form>
     		<%
-    	}
+    	
+    }
+    
+    for(Subscriber s: subs){
+    	pageContext.setAttribute("sub", s.getEmail());
+    	%>
+    	 <p>'${fn:escapeXml(sub)}' is Subscribed.</p>
+    	<%
     }
 
 
@@ -138,7 +190,7 @@ to create you own blog posts!</p>
         for (int i = 0; i < 5; i++) 
         //for(Greeting greeting : greetings)
         {
-        	if(greetings.get(i)!=null){
+        	if(greetings.size()>i){
 	        	Greeting greeting = greetings.get(i);
 	
 	            pageContext.setAttribute("greeting_content",

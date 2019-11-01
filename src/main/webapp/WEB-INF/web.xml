@@ -36,6 +36,16 @@
     	 	<servlet-name>subscribe</servlet-name>
     	 	<url-pattern>/subscribe</url-pattern>
     	 </servlet-mapping>
+    	 
+    	 <servlet>
+    	 	<servlet-name>unsubscribe</servlet-name>
+    	 	<servlet-class>guestbook.UnsubscriberServlet</servlet-class>
+    	 </servlet>
+    	 
+    	 <servlet-mapping>
+    	 	<servlet-name>unsubscribe</servlet-name>
+    	 	<url-pattern>/unsubscribe</url-pattern>
+    	 </servlet-mapping>
          
          
  		 <filter>
