@@ -18,6 +18,7 @@
 <%@ page import="com.googlecode.objectify.*" %>
 
 <%@ page import="guestbook.Greeting" %>
+<%@ page import="guestbook.Subscriber" %>
 
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -85,8 +86,25 @@ to create you own blog posts!</p>
 <%
 
     ObjectifyService.register(Greeting.class);
+    ObjectifyService.register(Subscriber.class);
     List<Greeting>greetings = ObjectifyService.ofy().load().type(Greeting.class).list();
+    List<Subscriber>subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
     Collections.sort(greetings);
+    
+    if(subs.isEmpty()){
+    	%>
+    	<p>No emails found</p>
+    	<%
+    }else{
+    	for(Subscriber sub : subs){
+    		pageContext.setAttribute("user_email",
+    				
+                    sub.getEmail());
+    		%>
+    			<p>'${fn:escapeXml(user_email)}' is subscribed.</p>
+    		<%
+    	}
+    }
 
 
     if (greetings.isEmpty()) {
@@ -94,12 +112,12 @@ to create you own blog posts!</p>
         %>
 
         <p>Blog '${fn:escapeXml(guestbookName)}' has no posts yet.</p>
-
-        <%
+       
+<%
 
     } else {
 
-        %>
+%>
 
         <p>Latest posts '${fn:escapeXml(guestbookName)}'.</p>
 
@@ -150,6 +168,10 @@ to create you own blog posts!</p>
 
       <input type="hidden" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/>
 
+    </form>
+    
+    <form action="/subscribe" method="post">
+    	<div><input type="submit" value="Subscribe" /></div>
     </form>
 
  

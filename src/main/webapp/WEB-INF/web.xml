@@ -26,6 +26,16 @@
         	<servlet-name>ofysign</servlet-name>
        		<url-pattern>/ofysign</url-pattern>
     	 </servlet-mapping>
+    	 
+    	 <servlet>
+    	 	<servlet-name>subscribe</servlet-name>
+    	 	<servlet-class>guestbook.SubscriberServlet</servlet-class>
+    	 </servlet>
+    	 
+    	 <servlet-mapping>
+    	 	<servlet-name>subscribe</servlet-name>
+    	 	<url-pattern>/subscribe</url-pattern>
+    	 </servlet-mapping>
          
          
  		 <filter>
