@@ -48,37 +48,11 @@
 
     pageContext.setAttribute("guestbookName", guestbookName);
 
-    UserService userService = UserServiceFactory.getUserService();
-
-    User user = userService.getCurrentUser();
-
-    if (user != null) {
-
-      pageContext.setAttribute("user", user);
-
-%>
-
-<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
-
-<a href="<%= userService.createLogoutURL(request.getRequestURI()) %>">sign out</a>.)</p>
-
-<%
-
-    } else {
-
 %>
 
 <h1>Welcome to the Blog!</h1>
 
-<p><a href="<%= userService.createLoginURL(request.getRequestURI()) %>">Sign in</a>
-
-to create you own blog posts!</p>
-
-<%
-
-    }
-
-%>
+<p>You are viewing all posts!</p>
 
  
 
@@ -105,12 +79,8 @@ to create you own blog posts!</p>
 
         <%
 
-        for (int i = 0; i < 5; i++) 
-        //for(Greeting greeting : greetings)
+        for(Greeting greeting : greetings)
         {
-        	if(greetings.get(i)!=null){
-	        	Greeting greeting = greetings.get(i);
-	
 	            pageContext.setAttribute("greeting_content",
 	
 	                                     greeting.getContent());
@@ -130,29 +100,12 @@ to create you own blog posts!</p>
 	
 	
 	            }
-        	}
 
         }
 
     }
 
-%>
-
-	<form action="allposts.jsp" method="get">
-		<input type="submit" value="View All Posts" name="viewall" id="viewposts">
-	</form>
-
-    <form action="/ofysign" method="post">
-
-      <div><textarea name="content" rows="3" cols="60"></textarea></div>
-
-      <div><input type="submit" value="Submit Post" /></div>
-
-      <input type="hidden" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/>
-
-    </form>
-
- 
+%> 
 
   </body>
 
