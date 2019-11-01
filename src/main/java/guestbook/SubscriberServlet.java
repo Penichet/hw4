@@ -46,15 +46,10 @@ public class SubscriberServlet extends HttpServlet {
 
         User user = userService.getCurrentUser();
         Subscriber sub = new Subscriber(user.getEmail());
-        //String email = user.getEmail();
-        
-        //Greeting nuser = new Greeting(user, req.getParameter("content"), req.getParameter("guestbookName"));
-
         ofy().save().entity(sub).now();
+        resp.sendRedirect("/ofyguestbook.jsp?guestbookName=" + req.getParameter("guestbookName"));
         
         //TODO: indicate that user is subscribed
-        //resp.sendRedirect("/ofyguestbook.jsp?guestbookName=" + req.getParameter("guestbookName"));
-
     }
 
 }
