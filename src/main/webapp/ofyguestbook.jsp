@@ -90,10 +90,22 @@ to create you own blog posts!</p>
     List<Greeting>greetings = ObjectifyService.ofy().load().type(Greeting.class).list();
     List<Subscriber>subs = ObjectifyService.ofy().load().type(Subscriber.class).list();
     Collections.sort(greetings);
+    boolean found = false;
+    //show unsub button if subbed, show sub button if unsubbed
+    if(user != null){
+	    for(Subscriber sub : subs){
+	    	if(sub.getEmail().equals(user.getEmail())){
+	    		found = true;
+	    	}
+	    }
+    }
     
-    if(subs.isEmpty()){
+    if(!found && user!=null){
     	%>
-    	<p>No emails found</p>
+    	<form action="/subscribe" method="post">
+    		<div><input type="submit" value="Subscribe" /></div>
+    		<input type="hidden" name="guestbookName" value="${fn:escapeXml(guestbookName)}"/>
+    	</form>
     	<%
     }else{
     	for(Subscriber sub : subs){
@@ -170,9 +182,7 @@ to create you own blog posts!</p>
 
     </form>
     
-    <form action="/subscribe" method="post">
-    	<div><input type="submit" value="Subscribe" /></div>
-    </form>
+    
 
  
 
